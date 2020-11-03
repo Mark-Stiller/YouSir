@@ -23,12 +23,15 @@ public class playercontroller : MonoBehaviour
     void Update()
     {
         float h = Input.GetAxis("Horizontal");
-        v.x = 0;
-        while (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
         {
             v.x = h;
         }
-        if(grounded) v.y += g;
+        else v.x = 0;
+        if(!grounded)
+        {
+            v.y += g;
+        }
         body.velocity = v;
     }
 
