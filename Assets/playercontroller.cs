@@ -6,6 +6,8 @@ public class playercontroller : MonoBehaviour
 {
     Rigidbody2D body;
     Vector2 v;
+    float g;
+    bool grounded;
 
     // Start is called before the first frame update
     void Start()
@@ -13,6 +15,8 @@ public class playercontroller : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         v = Vector2.zero;
         body.velocity = v;
+        g = -1;
+        grounded = false;
     }
 
     // Update is called once per frame
@@ -24,6 +28,12 @@ public class playercontroller : MonoBehaviour
         {
             v.x = h;
         }
+        if(grounded) v.y += g;
         body.velocity = v;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        grounded = true;
     }
 }
