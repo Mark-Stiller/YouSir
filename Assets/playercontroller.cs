@@ -16,9 +16,9 @@ public class playercontroller : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         v = Vector2.zero;
         body.velocity = v;
-        g = -0.01f;
+        g = -0.1f;
         grounded = false;
-        movespeed = 2;
+        movespeed = 7;
     }
 
     // Update is called once per frame
