@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class playercontroller : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class playercontroller : MonoBehaviour
 
     int keys;
     GameObject keyi;
+
+    Text finish;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +47,8 @@ public class playercontroller : MonoBehaviour
 
         facingright = true;
         facingleft = false;
+
+        finish = GameObject.Find("finish").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -77,7 +82,7 @@ public class playercontroller : MonoBehaviour
 
         if (jumps > 0 && Input.GetKeyDown(KeyCode.Space))
         {
-            v.y = 4.3f;
+            v.y = 4.5f;
             jumps--;
         }
 
@@ -145,6 +150,10 @@ public class playercontroller : MonoBehaviour
 
         body.velocity = v;
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -201,6 +210,13 @@ public class playercontroller : MonoBehaviour
         {
             Destroy(collision.gameObject);
             keys--;
+        }
+
+        //level clear
+        if (collision.gameObject.name == "finishdoor")
+        {
+            finish.GetComponent<Text>().text = "Congratulations!!!" +
+                "\nPress <R> to reset the level";
         }
     }
 
