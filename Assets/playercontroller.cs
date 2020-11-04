@@ -17,6 +17,9 @@ public class playercontroller : MonoBehaviour
     GameObject jump0i, jump1i, jump2i, jump3i, dashi;
     bool facingleft, facingright;
 
+    int keys;
+    GameObject keyi;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +40,7 @@ public class playercontroller : MonoBehaviour
         jump2i = GameObject.Find("jump2");
         jump3i = GameObject.Find("jump3");
         dashi = GameObject.Find("dash");
+        keyi = GameObject.Find("uikey");
 
         facingright = true;
         facingleft = false;
@@ -49,22 +53,41 @@ public class playercontroller : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
         {
             v.x = h * movespeed;
+            if (v.x > 0)
+            {
+                facingleft = false;
+            }
+            else if(v.x < 0)
+            {
+                facingleft = true;
+            }
         }
         else v.x = 0;
         if(!grounded)
         {
+            g = -0.1f;
             v.y += g;
+        }
+        else
+        {
+            g = 0;
         }
         //set facing direction
 
 
         if (jumps > 0 && Input.GetKeyDown(KeyCode.Space))
         {
-            v.y = 5;
+            v.y = 4.3f;
             jumps--;
         }
 
         //moderate UI display
+        //key
+        if (keys < 1)
+        {
+            keyi.SetActive(false);
+        }
+        else keyi.SetActive(true);
         switch (jumps)
         {
             case 0:
@@ -99,7 +122,7 @@ public class playercontroller : MonoBehaviour
         else dashi.SetActive(false);
 
         //climbing
-        if (climbable && Input.GetKeyDown(KeyCode.UpArrow))
+        if (climbable && Input.GetKey(KeyCode.UpArrow))
         {
             g = 0;
             v.y = 5;
@@ -111,34 +134,78 @@ public class playercontroller : MonoBehaviour
             Dash();
         }
 
+
+        if (v.y < -10)
+        {
+            v.y = 0;
+            grounded = true;
+            if (candash) dash = true;
+            jumps = maxjumps;
+        }
+
         body.velocity = v;
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "StaticSolid")
+        if (collision.gameObject.name == "StaticSolid" || collision.gameObject.name == "StaticPlatform" || collision.gameObject.name == "plate")
         {
-            grounded = true;
-            dash = true;
-        }
-        if (collision.gameObject.name == "StaticClimbing")
-        {
-            climbable = true;
-        }
-        jumps = maxjumps;
-
-
-        if (collision.gameObject.name == "StaticSolid")
-        {
-            climbable = true;
+            if (v.y <= 0)
+            {
+                grounded = true;
+                if (candash) dash = true;
+                jumps = maxjumps;
+            }
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "StaticSolid") {
+        if (collision.gameObject.name == "StaticSolid" || collision.gameObject.name == "StaticPlatform")
+        {
             grounded = false;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == "plate")
+        {
+            Destroy(GameObject.Find("gate_plate"));
+        }
+        if (collision.gameObject.name == "adddash")
+        {
+            Destroy(collision.gameObject);
+            candash = true;
+        }
+        if (collision.gameObject.name == "addjump")
+        {
+            Destroy(collision.gameObject);
+            maxjumps++;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == "StaticClimbing")
+        {
+            climbable = true;
+        }
+        if (collision.gameObject.name == "key" && Input.GetKeyDown(KeyCode.Z))
+        {
+            Destroy(collision.gameObject);
+            keys++;
+        }
+        if (collision.gameObject.name == "gate_key" && keys > 0 && Input.GetKeyDown(KeyCode.X))
+        {
+            Destroy(collision.gameObject);
+            keys--;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
         if (collision.gameObject.name == "StaticClimbing")
         {
             climbable = false;
@@ -147,16 +214,19 @@ public class playercontroller : MonoBehaviour
 
     public void Dash()
     {
-        if (dash)
+        if (candash && dash)
         {
             if (facingleft)
             {
-                v.x = -10;
+                v.x = -15;
+                v.y = 2;
             }
             else
             {
-                v.x = 10;
+                v.x = 15;
+                v.y = 2;
             }
+            dash = false;
         }
     }
 }
