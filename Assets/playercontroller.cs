@@ -15,6 +15,7 @@ public class playercontroller : MonoBehaviour
 
     bool jump0, jump1, jump2, jump3, dash, candash;
     GameObject jump0i, jump1i, jump2i, jump3i, dashi;
+    bool facingleft, facingright;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +37,9 @@ public class playercontroller : MonoBehaviour
         jump2i = GameObject.Find("jump2");
         jump3i = GameObject.Find("jump3");
         dashi = GameObject.Find("dash");
+
+        facingright = true;
+        facingleft = false;
     }
 
     // Update is called once per frame
@@ -51,14 +55,14 @@ public class playercontroller : MonoBehaviour
         {
             v.y += g;
         }
+        //set facing direction
+
 
         if (jumps > 0 && Input.GetKeyDown(KeyCode.Space))
         {
             v.y = 5;
             jumps--;
         }
-
-        body.velocity = v;
 
         //moderate UI display
         switch (jumps)
@@ -98,8 +102,16 @@ public class playercontroller : MonoBehaviour
         if (climbable && Input.GetKeyDown(KeyCode.UpArrow))
         {
             g = 0;
+            v.y = 5;
         }
         else g = -0.1f;
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Dash();
+        }
+
+        body.velocity = v;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -107,6 +119,7 @@ public class playercontroller : MonoBehaviour
         if (collision.gameObject.name == "StaticSolid")
         {
             grounded = true;
+            dash = true;
         }
         if (collision.gameObject.name == "StaticClimbing")
         {
@@ -129,6 +142,21 @@ public class playercontroller : MonoBehaviour
         if (collision.gameObject.name == "StaticClimbing")
         {
             climbable = false;
+        }
+    }
+
+    public void Dash()
+    {
+        if (dash)
+        {
+            if (facingleft)
+            {
+                v.x = -10;
+            }
+            else
+            {
+                v.x = 10;
+            }
         }
     }
 }
