@@ -23,6 +23,8 @@ public class playercontroller : MonoBehaviour
 
     Text finish;
 
+    public float jumpheight;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +51,8 @@ public class playercontroller : MonoBehaviour
         facingleft = false;
 
         finish = GameObject.Find("finish").GetComponent<Text>();
+
+        //jumpheight = 9;
     }
 
     // Update is called once per frame
@@ -82,7 +86,7 @@ public class playercontroller : MonoBehaviour
 
         if (jumps > 0 && Input.GetKeyDown(KeyCode.Space))
         {
-            v.y = 4.5f;
+            v.y = jumpheight;
             jumps--;
         }
 
@@ -140,10 +144,10 @@ public class playercontroller : MonoBehaviour
         }
 
 
-        if (v.y < -10)
+        if (v.y < 0 && grounded)
         {
             v.y = 0;
-            grounded = true;
+            //grounded = true;
             if (candash) dash = true;
             jumps = maxjumps;
         }
@@ -192,6 +196,7 @@ public class playercontroller : MonoBehaviour
         {
             Destroy(collision.gameObject);
             maxjumps++;
+            jumps = maxjumps;
         }
     }
 
