@@ -37,6 +37,7 @@ public class playercontroller : MonoBehaviour
 
         jumps = 1;
         maxjumps = 1;
+        keys = 0;
 
         //setup the booleans and ui elements
         jump0 = jump1 = jump2 = jump3 = candash = climbable = dash = false;
