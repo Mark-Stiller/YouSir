@@ -67,13 +67,13 @@ public class playercontroller : MonoBehaviour
             {
                 facingleft = false;
             }
-            else if(v.x < 0)
+            else if (v.x < 0)
             {
                 facingleft = true;
             }
         }
         else v.x = 0;
-        if(!grounded)
+        if (!grounded)
         {
             g = -0.1f;
             v.y += g;
@@ -144,8 +144,8 @@ public class playercontroller : MonoBehaviour
             Dash();
         }
 
-
-        if (v.y < 0 && grounded)
+        //use <[> to reset velocity in case something goes wrong
+        if ((v.y < 0 && grounded || Input.GetKeyDown(KeyCode.LeftBracket)))
         {
             v.y = 0;
             //grounded = true;
@@ -240,13 +240,14 @@ public class playercontroller : MonoBehaviour
         {
             if (facingleft)
             {
-                v.x = -15;
-                v.y = 2;
+                //v.x = -15;
+                //v.y = 2;
+                body.AddForce(new Vector2(-50,10), ForceMode2D.Impulse);
             }
             else
             {
-                v.x = 15;
-                v.y = 2;
+                //v.x = 15;
+                //v.y = 2;
             }
             dash = false;
         }
